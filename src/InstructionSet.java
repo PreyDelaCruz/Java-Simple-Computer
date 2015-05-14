@@ -10,9 +10,9 @@ public class InstructionSet {
 	protected String[][] map;
 	private File file;
 	private Scanner scanner;
-	protected String operand1, operand2, newOp2="", newOp1="", carry,  output;
+	protected String operand1, operand2, newOp2="", newOp1="", output;
 	protected boolean isFound;
-	protected int oneCtr;
+//	protected int oneCtr;
 	
 
 
@@ -244,7 +244,6 @@ public class InstructionSet {
 
 	protected void and() {
 
-		carry = "0";
 		output = "";
 		isFound = find( operand2 );
 
@@ -261,39 +260,47 @@ public class InstructionSet {
 			if( map[i][0].equals( operand1 ) )
 				newOp1 = map[i][1];
 
-		for(int i=7; i>=0; i--) {
-			oneCtr = 0;
-
-			if( carry=="1" ) oneCtr++;
-			if( newOp1.charAt(i)=='1' ) oneCtr++;
-			if( newOp2.charAt(i)=='1' ) oneCtr++;
-
-			if( oneCtr==0 ) {
-				output += "0";
-				carry = "0";
-			}
-			else if( oneCtr==1 ) {
+		for(int i=0; i<8; i++) {
+			if( newOp1.charAt(i)=='1' && newOp2.charAt(i)=='1' )
 				output += "1";
-				carry = "0";
-			}
-			else if( oneCtr==2 ) {
+			else
 				output += "0";
-				carry = "1";
-			}
-			else if( oneCtr==3 ) {
-				output += "1";
-				carry = "1";
-			}
 		}
-
-		output = reverse( output );
 
 		for(int i=0; i<map.length; i++)
 			if( map[i][0].equals( operand1 ) )
 				map[i][1] = output;						
 	}
 
-	protected void or() {}
+	protected void or() {
+
+		output = "";
+		isFound = find( operand2 );
+
+		if( isFound==false ) {
+			newOp2 = convertToBinary( operand2 );
+		}
+		else {
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					newOp2 = map[i][1];						
+		}
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				newOp1 = map[i][1];
+
+		for(int i=0; i<8; i++) {
+			if( newOp1.charAt(i)=='1' || newOp2.charAt(i)=='1' )
+				output += "1";
+			else
+				output += "0";
+		}
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = output;						
+	}
 
 	protected void not() {}
 
@@ -356,25 +363,30 @@ public class InstructionSet {
 	}
 }
 
-//		System.out.println(  );
+/*
+		for(int i=7; i>=0; i--) {
+			oneCtr = 0;
 
-/*		isFound=false;
+			if( carry=="1" ) oneCtr++;
+			if( newOp1.charAt(i)=='1' ) oneCtr++;
+			if( newOp2.charAt(i)=='1' ) oneCtr++;
 
-		for(int i=0; i<map.length; i++) {
-			if( !map[i][0].equals(operand2) )
-				isFound = false;
-			else {
-				isFound = true;
-				break;
-			}	
+			if( oneCtr==0 ) {
+				output += "0";
+				carry = "0";
+			}
+			else if( oneCtr==1 ) {
+				output += "1";
+				carry = "0";
+			}
+			else if( oneCtr==2 ) {
+				output += "0";
+				carry = "1";
+			}
+			else if( oneCtr==3 ) {
+				output += "1";
+				carry = "1";
+			}
 		}
-*/		
 
-/*		tmp = Integer.toBinaryString( Integer.parseInt( operand2 ) );
-
-			while( newOp2.length()<(8-tmp.length()) )
-				newOp2 += "0";
-
-			newOp2 += tmp;
 */
-	
