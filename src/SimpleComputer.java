@@ -21,7 +21,7 @@ public class SimpleComputer implements ActionListener{
 	private static int operandCtr=0, lineCtr=0;
 	private static String tempInst="";
 	private static String[][] instArray, machineCodes;
-	private static String mar0, mar1, r0, r1, r2, r3, r4, r5, r6, r7, pc, instReg, flag;
+	private static String[] clockCycle;
 	
 
 
@@ -243,11 +243,11 @@ public class SimpleComputer implements ActionListener{
 		codeLabel.setPreferredSize( new Dimension( 490, 20 ) );
 		codePanel.add( codeLabel );
 
-		machineCodeArea = new JTextArea( "MACHINE CODE", 12, 21 );
+		machineCodeArea = new JTextArea( "MACHINE CODE\n", 12, 21 );
 		machineCodeArea.setEditable( false );
 		codePanel.add( machineCodeArea );
 
-		actualInstArea = new JTextArea( "ACTUAL INSTRUCTION", 12, 21 );
+		actualInstArea = new JTextArea( "ACTUAL INSTRUCTION\n", 12, 21 );
 		actualInstArea.setEditable( false );
 		codePanel.add( actualInstArea );
 
@@ -266,6 +266,7 @@ public class SimpleComputer implements ActionListener{
 		String tempRegister;
 
 		instArray = new String[lineCtr][3];
+		clockCycle = new String[lineCtr];
 
 		String[] temp = instructionArea.getText().split( "\n" );
 
@@ -273,16 +274,56 @@ public class SimpleComputer implements ActionListener{
 			instArray[i] = temp[i].split( "," );
 		
 		for(int i=0; i<(instArray.length); i++) {
+			updateCodes( instArray[i][0], instArray[i][1], instArray[i][2] );
 			instructionSet.doOperation( instArray[i][0], instArray[i][1], instArray[i][2] );
 			updateRegisters();
-			updateCodes();
 		}
 
-		//updatePipeline();
+		startClockCycle();
+		updatePipeline();
 	}
 
-	private void updateCodes() {
+	private void updateCodes( String opcode, String operand1, String operand2 ) {
 		
+		boolean found=false;
+
+		for(int i=0; i<instructionSet.map.length; i++) {
+			if( instructionSet.map[i][0].equals( opcode ) ) {
+				machineCodeArea.append( instructionSet.map[i][1] + " " );
+			}
+		}
+
+		for(int i=0; i<instructionSet.map.length; i++) {
+			if( instructionSet.map[i][0].equals( operand1 ) ) {
+				machineCodeArea.append( instructionSet.map[i][1] + " " );
+				found = true;
+			}
+		}
+
+		if( found==false ) {
+			machineCodeArea.append( operand1 + " " );
+		}
+
+		found = false;
+
+		for(int i=0; i<instructionSet.map.length; i++) {
+			if( instructionSet.map[i][0].equals( operand2 ) ) {
+				machineCodeArea.append( instructionSet.map[i][1] + "\n" );
+				found = true;
+			}
+		}
+
+		if( found==false ) {
+			machineCodeArea.append( operand2 + "\n" );
+		}
+
+		actualInstArea.append( opcode + "," + operand1 + "," + operand2 + "\n" );
+	}
+
+	private void startClockCycle() {
+
+		for(int i=0; i<clockCycle.length; i++)
+			clockCycle[i] = "";
 	}
 
 	private void updatePipeline() {
@@ -345,6 +386,8 @@ public class SimpleComputer implements ActionListener{
 			pipelineArea.setText( "" );
 			machineCodeArea.setText( "" );
 			actualInstArea.setText( "" );
+			instructionSet.initMap( "machineCodes.txt" );
+			updateRegisters();
 
 			for(int j=0; j<registerList.length; j++)
 				registerList[j].setEnabled( false );

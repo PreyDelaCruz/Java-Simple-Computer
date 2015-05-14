@@ -10,7 +10,8 @@ public class InstructionSet {
 	protected String[][] map;
 	private File file;
 	private Scanner scanner;
-	protected String operand1, operand2, op1OldValue;
+	protected String operand1, operand2, newOp2="";
+	protected boolean isFound;
 	
 
 
@@ -19,7 +20,7 @@ public class InstructionSet {
 		initMap( "machineCodes.txt" );
 	}
 
-	private void initMap( String f ) {
+	protected void initMap( String f ) {
 		String line, token="";
 		String[] temp, subtemp;
 
@@ -78,8 +79,226 @@ public class InstructionSet {
 
 	protected void load() {
 
-		boolean isFound=false;
-		String newOp2="", tmp;
+		isFound = find( operand2 );
+
+		if( isFound==false )
+			newOp2 = convertToBinary( operand2 );
+		else
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					newOp2 = map[i][1];			
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = newOp2;
+	}
+
+	protected void store() {}
+
+	protected void save() {}
+
+	protected void increment() {
+
+		int temp;
+
+		isFound = find( operand2 );
+
+		if( isFound==false )
+			temp = Integer.parseInt( operand2 ) + 1;
+		else { 
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					newOp2 = map[i][1];			
+
+			temp = convertToDecimal( newOp2 ) + 1;
+		}
+
+		newOp2 = convertToBinary( Integer.toString( temp ) );
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = newOp2;
+	}
+
+	protected void decrement() {
+
+		int temp;
+
+		isFound = find( operand2 );
+
+		if( isFound==false )
+			temp = Integer.parseInt( operand2 ) - 1;
+		else { 
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					newOp2 = map[i][1];			
+
+			temp = convertToDecimal( newOp2 ) - 1;
+		}
+
+		newOp2 = convertToBinary( Integer.toString( temp ) );
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = newOp2;		
+	}
+
+	protected void add() {
+
+		int temp1=0, temp2=0;
+
+		isFound = find( operand2 );
+
+		if( isFound==false )
+			temp2 = Integer.parseInt( operand2 );
+		else
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					temp2 = convertToDecimal( map[i][1] );
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				temp1 = convertToDecimal( map[i][1] );
+
+		newOp2 = convertToBinary( Integer.toString( temp1 += temp2 ) );
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = newOp2;		
+	}
+
+	protected void subtract() {
+
+		int temp1=0, temp2=0;
+
+		isFound = find( operand2 );
+
+		if( isFound==false )
+			temp2 = Integer.parseInt( operand2 );
+		else
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					temp2 = convertToDecimal( map[i][1] );
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				temp1 = convertToDecimal( map[i][1] );
+
+		newOp2 = convertToBinary( Integer.toString( temp1 -= temp2 ) );
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = newOp2;				
+	}
+
+	protected void multiply() {
+
+		int temp1=0, temp2=0;
+
+		isFound = find( operand2 );
+
+		if( isFound==false )
+			temp2 = Integer.parseInt( operand2 );
+		else
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					temp2 = convertToDecimal( map[i][1] );
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				temp1 = convertToDecimal( map[i][1] );
+
+		newOp2 = convertToBinary( Integer.toString( temp1 *= temp2 ) );
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = newOp2;						
+	}
+
+	protected void divide() {
+
+		int temp1=0, temp2=0;
+
+		isFound = find( operand2 );
+
+		if( isFound==false )
+			temp2 = Integer.parseInt( operand2 );
+		else
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					temp2 = convertToDecimal( map[i][1] );
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				temp1 = convertToDecimal( map[i][1] );
+
+		newOp2 = convertToBinary( Integer.toString( temp1 /= temp2 ) );
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = newOp2;						
+	}
+
+	protected void compare() {}
+
+	protected void and() {}
+
+	protected void or() {}
+
+	protected void not() {}
+
+	protected void xor() {}
+
+	protected void jumpIfEqual() {}
+
+	protected void jumpIfGreaterThan() {}
+
+	protected void jumpIfLessThan() {}
+
+	protected void jump() {}
+
+	protected boolean find( String operand ) {
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand ) )
+				return true;
+
+		return false;
+	}
+
+	protected String convertToBinary( String operand ) {
+
+			newOp2 = "";
+
+			String tmp = Integer.toBinaryString( Integer.parseInt( operand ) );
+
+			while( newOp2.length()<(8-tmp.length()) )
+				newOp2 += "0";
+
+			newOp2 += tmp;
+
+			return newOp2;
+	}
+
+	protected int convertToDecimal( String operand ) {
+
+		int bit=1;
+		int decimal=0;
+
+		for(int i=(operand.length()-1); i>=0; i--) {
+			if( operand.charAt(i)=='1' )
+				decimal = decimal + bit;
+
+			bit = bit * 2;
+		}
+
+		return decimal;
+	}
+}
+
+//		System.out.println(  );
+
+/*		isFound=false;
 
 		for(int i=0; i<map.length; i++) {
 			if( !map[i][0].equals(operand2) )
@@ -89,152 +308,13 @@ public class InstructionSet {
 				break;
 			}	
 		}
-		
-		if( isFound==false ) {
-			tmp = Integer.toBinaryString( Integer.parseInt( operand2 ) );
+*/		
+
+/*		tmp = Integer.toBinaryString( Integer.parseInt( operand2 ) );
 
 			while( newOp2.length()<(8-tmp.length()) )
 				newOp2 += "0";
 
 			newOp2 += tmp;
-
-			for(int i=0; i<map.length; i++)
-				if( map[i][0].equals(operand1) )
-					map[i][1] = newOp2;
-		}
-		else {
-			for(int i=0; i<map.length; i++)
-				if( map[i][0].equals(operand2) )
-					newOp2 = map[i][1];
-
-			for(int i=0; i<map.length; i++)
-				if( map[i][0].equals(operand1) )
-					map[i][1] = newOp2;
-		}
-	}
-
-	protected void store() {
-
-		
-
-
-
-	}
-
-	protected void save() {
-
+*/
 	
-
-
-
-	}
-
-	protected void increment() {
-
-		
-	}
-
-	protected void decrement() {
-
-		
-	}
-
-	protected void add() {
-
-		
-
-
-	}
-
-	protected void subtract() {
-
-		
-
-
-
-	}
-
-	protected void multiply() {
-
-		
-
-
-
-	}
-
-	protected void divide() {
-
-		
-
-
-	}
-
-	protected void compare() {
-
-		
-
-
-	}
-
-	protected void and() {
-
-		
-
-
-
-	}
-
-	protected void or() {
-
-		
-
-
-
-	}
-
-	protected void not() {
-
-		
-
-
-
-	}
-
-	protected void xor() {
-
-		
-
-
-	}
-
-	protected void jumpIfEqual() {
-
-		
-
-
-
-	}
-
-	protected void jumpIfGreaterThan() {
-
-		
-
-
-
-	}
-
-	protected void jumpIfLessThan() {
-
-		
-
-
-
-	}
-
-	protected void jump() {
-
-		
-
-
-	}
-}
