@@ -302,7 +302,31 @@ public class InstructionSet {
 				map[i][1] = output;						
 	}
 
-	protected void not() {}
+	protected void not() {
+
+		output = "";
+		isFound = find( operand2 );
+
+		if( isFound==false ) {
+			newOp2 = convertToBinary( operand2 );
+		}
+		else {
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					newOp2 = map[i][1];						
+		}
+
+		for(int i=0; i<8; i++) {
+			if( newOp2.charAt(i)=='0' )
+				output += "1";
+			else
+				output += "0";
+		}
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = output;		
+	}
 
 	protected void xor() {}
 
