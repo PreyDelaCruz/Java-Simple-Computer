@@ -295,26 +295,3 @@ public class InstructionSet {
 		return decimal;
 	}
 }
-
-//		System.out.println(  );
-
-/*		isFound=false;
-
-		for(int i=0; i<map.length; i++) {
-			if( !map[i][0].equals(operand2) )
-				isFound = false;
-			else {
-				isFound = true;
-				break;
-			}	
-		}
-*/		
-
-/*		tmp = Integer.toBinaryString( Integer.parseInt( operand2 ) );
-
-			while( newOp2.length()<(8-tmp.length()) )
-				newOp2 += "0";
-
-			newOp2 += tmp;
-*/
-	
