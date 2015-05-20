@@ -12,7 +12,6 @@ public class InstructionSet {
 	private Scanner scanner;
 	protected String operand1, operand2, newOp2="", newOp1="", output;
 	protected boolean isFound;
-//	protected int oneCtr;
 	
 
 
@@ -94,9 +93,15 @@ public class InstructionSet {
 				map[i][1] = newOp2;
 	}
 
-	protected void store() {}
+	protected void store() {
 
-	protected void save() {}
+
+	}
+
+	protected void save() {
+
+
+	}
 
 	protected void increment() {
 
@@ -240,7 +245,10 @@ public class InstructionSet {
 				map[i][1] = newOp2;						
 	}
 
-	protected void compare() {}
+	protected void compare() {
+
+
+	}
 
 	protected void and() {
 
@@ -358,13 +366,25 @@ public class InstructionSet {
 				map[i][1] = output;			
 	}
 
-	protected void jumpIfEqual() {}
+	protected void jumpIfEqual() {
 
-	protected void jumpIfGreaterThan() {}
 
-	protected void jumpIfLessThan() {}
+	}
 
-	protected void jump() {}
+	protected void jumpIfGreaterThan() {
+
+
+	}
+
+	protected void jumpIfLessThan() {
+
+
+	}
+
+	protected void jump() {
+
+
+	}
 
 	protected boolean find( String operand ) {
 
@@ -404,6 +424,7 @@ public class InstructionSet {
 		return decimal;
 	}
 
+	/* Might not be needed. */
 	protected String reverse( String str ) {
 
 		String temp="";
@@ -414,31 +435,3 @@ public class InstructionSet {
 		return temp;
 	}
 }
-
-/*
-		for(int i=7; i>=0; i--) {
-			oneCtr = 0;
-
-			if( carry=="1" ) oneCtr++;
-			if( newOp1.charAt(i)=='1' ) oneCtr++;
-			if( newOp2.charAt(i)=='1' ) oneCtr++;
-
-			if( oneCtr==0 ) {
-				output += "0";
-				carry = "0";
-			}
-			else if( oneCtr==1 ) {
-				output += "1";
-				carry = "0";
-			}
-			else if( oneCtr==2 ) {
-				output += "0";
-				carry = "1";
-			}
-			else if( oneCtr==3 ) {
-				output += "1";
-				carry = "1";
-			}
-		}
-
-*/
