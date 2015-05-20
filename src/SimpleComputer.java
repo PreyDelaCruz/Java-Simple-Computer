@@ -12,15 +12,16 @@ public class SimpleComputer implements ActionListener{
 	private static InstructionSet instructionSet = new InstructionSet();
 	private static Pipeline pipeline;
 	private static JFrame frame;
-	private static JPanel topPanel, centerPanel, opcodePanel, registerPanel, inputPanel, registersPanel, cyclePanel, pipelinePanel, codePanel, clockCyclePanel;
+	private static JPanel topPanel, centerPanel, opcodePanel, registerPanel, inputPanel, registersPanel, cyclePanel, pipelinePanel, codePanel, clockCyclePanel, subPipelinePanel;
 	private static JButton[] opcodeList = new JButton[18];
 	private static JButton[] registerList = new JButton[11];
-	private static JLabel[][] cc;
-	private static JButton addInst, process, reset, clear;
-	private static JLabel opcodeLabel, registerLabel, inputLabel, cycleLabel, registersLabel, pipelineLabel, codeLabel;
+	private static JButton[][] cc;
+	private static JTextArea[][] pp;
+	private static JButton addInst, process, reset, clear, next;
+	private static JLabel opcodeLabel, registerLabel, inputLabel, cycleLabel, registersLabel, pipelineLabel, codeLabel, ccLabel;
 	private static JTextField inputField;
 	private static JTextArea instructionArea, registersArea, pipelineArea, machineCodeArea, actualInstArea, clockCycleArea;
-	private static int operandCtr=0, lineCtr=0;
+	private static int operandCtr=0, lineCtr=0, nextCtr, limit;
 	private static String tempInst="";
 	private static String[][] instArray, machineCodes;
 	
@@ -39,6 +40,7 @@ public class SimpleComputer implements ActionListener{
 		pipelinePanel = new JPanel();
 		codePanel = new JPanel();
 		clockCyclePanel = new JPanel();
+		subPipelinePanel = new JPanel();
 
 		initTopPanel();
 		initCenterPanel();
@@ -181,10 +183,17 @@ public class SimpleComputer implements ActionListener{
 		cyclePanel.add( clockCyclePanel );
 	}
 
+	private void initSubPipelinePanel() {
+
+		subPipelinePanel.setPreferredSize( new Dimension( 470, 160 ) );
+		subPipelinePanel.setBackground( Color.WHITE );
+
+		pipelinePanel.add( subPipelinePanel );
+	}
+
 	private void initCyclePanel() {
 
 		cyclePanel.setPreferredSize( new Dimension( 490, 280 ) );
-//		cyclePanel.setLayout( new GridLayout( 5, 5 ) );
 		cyclePanel.setBackground( Color.PINK );
 
 		cycleLabel = new JLabel( "CYCLES" );
@@ -240,9 +249,16 @@ public class SimpleComputer implements ActionListener{
 		pipelineLabel.setPreferredSize( new Dimension( 490, 20 ) );
 		pipelinePanel.add( pipelineLabel );
 
-		pipelineArea = new JTextArea( 12, 43 );
-		pipelineArea.setEditable( false );
-		pipelinePanel.add( pipelineArea );
+		initSubPipelinePanel();
+
+		ccLabel = new JLabel();
+		ccLabel.setFont( new Font( "Dialog", Font.BOLD, 20 ) );
+		pipelinePanel.add( ccLabel );
+
+		next = new JButton( "NEXT" );
+		next.setPreferredSize( new Dimension( 90, 30 ) );
+		next.addActionListener( this );
+		pipelinePanel.add( next );
 
 		centerPanel.add( pipelinePanel );
 	}
@@ -295,7 +311,25 @@ public class SimpleComputer implements ActionListener{
 		}
 
 		pipeline.startClockCycle();
-		updatePipeline();
+		updateClockCycle();
+//		updatePipeline();
+
+		nextCtr = 0;
+		limit = pipeline.pipe[0].size();
+		pp = new JTextArea[2][lineCtr];
+		subPipelinePanel.setLayout( new GridLayout( 2, lineCtr ) );
+
+		for(int i=0; i<2; i++) {
+			for(int j=0; j<lineCtr; j++) {
+				pp[i][j] = new JTextArea( "HAHAHA" );
+				pp[i][j].setLineWrap( true );
+				pp[i][j].setMargin( new Insets( 10, 10, 10, 10 ) );
+				pp[i][j].setEditable( false );
+				subPipelinePanel.add( pp[i][j] );
+			}
+		}
+
+		updatePipeline( nextCtr );
 	}
 
 	private void updateCodes( String opcode, String operand1, String operand2 ) {
@@ -335,19 +369,19 @@ public class SimpleComputer implements ActionListener{
 		actualInstArea.append( opcode + "," + operand1 + "," + operand2 + "\n" );
 	}
 
-	private void updatePipeline() {
+	private void updateClockCycle() {
 
-		cc = new JLabel[lineCtr+1][pipeline.max];
+		cc = new JButton[lineCtr+1][pipeline.max];
 		clockCyclePanel.setLayout( new GridLayout( lineCtr, pipeline.max ) );
 
 		for(int i=0; i<lineCtr; i++) {
 			for(int j=0; j<pipeline.pipe[i].size(); j++) {
 				
 				if( pipeline.pipe[i].get(j)=="N" ) {
-					cc[i][j] = new JLabel();
+					cc[i][j] = new JButton();
 				}
 				else {
-					cc[i][j] = new JLabel( pipeline.pipe[i].get(j) );
+					cc[i][j] = new JButton( pipeline.pipe[i].get(j) );
 
 					if( pipeline.pipe[i].get(j)=="F" )
 						cc[i][j].setBackground( Color.GREEN );
@@ -362,7 +396,35 @@ public class SimpleComputer implements ActionListener{
 				clockCyclePanel.add( cc[i][j] );
 			}
 		}
+	}
 
+	private void updatePipeline( int index ) {
+
+		ccLabel.setText( "Clock Cycle: " + (index+1) );
+
+		for(int i=0; i<lineCtr; i++) {
+
+			if( pipeline.pipe[i].get(index)=="N" ) {
+				pp[0][i].setText( "" );
+				pp[1][i].setText( "" );
+				pp[0][i].setBackground( Color.WHITE );
+			}
+			else {
+				pp[0][i].setText( pipeline.pipe[i].get(index) );
+				pp[1][i].setText( instArray[i][0] + "," + instArray[i][1] + "," + instArray[i][2] );
+
+				if( pipeline.pipe[i].get(index)=="F" )
+					pp[0][i].setBackground( Color.GREEN );
+				if( pipeline.pipe[i].get(index)=="D" )
+					pp[0][i].setBackground( Color.RED );
+				if( pipeline.pipe[i].get(index)=="E" )
+					pp[0][i].setBackground( Color.BLUE );
+				if( pipeline.pipe[i].get(index)=="S" )
+					pp[0][i].setBackground( Color.YELLOW );
+			}
+		}
+
+		nextCtr++;
 	}
 
 	private void updateRegisters() {
@@ -375,6 +437,19 @@ public class SimpleComputer implements ActionListener{
 	}
 
 	public void actionPerformed( ActionEvent e ) {
+
+		if( e.getSource()==next ) {
+			if( instructionArea.getText().isEmpty() ) {
+				JOptionPane.showMessageDialog( null, "Instruction area empty!" );
+			}
+			else {
+				if( nextCtr<limit ) 
+					updatePipeline( nextCtr );
+
+				if( nextCtr==limit )
+					next.setEnabled( false );
+			}			
+		}
 
 		if( e.getSource()==addInst ) {
 			if( inputField.getText().isEmpty() || operandCtr<2 ) {
@@ -418,7 +493,7 @@ public class SimpleComputer implements ActionListener{
 
 		if( e.getSource()==reset ) {
 			instructionArea.setText( "" );
-			pipelineArea.setText( "" );
+//			pipelineArea.setText( "" );
 			machineCodeArea.setText( "" );
 			actualInstArea.setText( "" );
 			instructionSet.initMap( "machineCodes.txt" );
