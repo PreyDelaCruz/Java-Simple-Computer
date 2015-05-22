@@ -1,3 +1,13 @@
+/*
+	CMSC 132 Project: Simple Computer
+	Group Members:	Dela Cruz, Precious Mae A., 2009-45749
+					<>
+					<>
+					<>
+*/
+
+
+
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.awt.*;
@@ -312,7 +322,6 @@ public class SimpleComputer implements ActionListener{
 
 		pipeline.startClockCycle();
 		updateClockCycle();
-//		updatePipeline();
 
 		nextCtr = 0;
 		limit = pipeline.pipe[0].size();
@@ -493,7 +502,6 @@ public class SimpleComputer implements ActionListener{
 
 		if( e.getSource()==reset ) {
 			instructionArea.setText( "" );
-//			pipelineArea.setText( "" );
 			machineCodeArea.setText( "" );
 			actualInstArea.setText( "" );
 			instructionSet.initMap( "machineCodes.txt" );

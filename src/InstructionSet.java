@@ -1,3 +1,13 @@
+/*
+	CMSC 132 Project: Simple Computer
+	Group Members:	Dela Cruz, Precious Mae A., 2009-45749
+					<>
+					<>
+					<>
+*/
+
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -95,12 +105,34 @@ public class InstructionSet {
 
 	protected void store() {
 
+		isFound = find( operand2 );
 
+		if( isFound==false )
+			newOp2 = convertToBinary( operand2 );
+		else
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					newOp2 = map[i][1];			
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = newOp2;
 	}
 
 	protected void save() {
 
+		isFound = find( operand2 );
 
+		if( isFound==false )
+			newOp2 = convertToBinary( operand2 );
+		else
+			for(int i=0; i<map.length; i++)
+				if( map[i][0].equals( operand2 ) )
+					newOp2 = map[i][1];			
+
+		for(int i=0; i<map.length; i++)
+			if( map[i][0].equals( operand1 ) )
+				map[i][1] = newOp2;
 	}
 
 	protected void increment() {

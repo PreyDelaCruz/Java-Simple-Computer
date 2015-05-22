@@ -1,3 +1,13 @@
+/*
+	CMSC 132 Project: Simple Computer
+	Group Members:	Dela Cruz, Precious Mae A., 2009-45749
+					<>
+					<>
+					<>
+*/
+
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
