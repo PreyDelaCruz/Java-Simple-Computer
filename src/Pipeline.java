@@ -121,12 +121,12 @@ public class Pipeline {
 		countMax();
 		fill();
 
-		for(int i=0; i<pipe.length; i++) {
+/*		for(int i=0; i<pipe.length; i++) {
 			for(int j=0; j<pipe[i].size(); j++)
 				System.out.print( pipe[i].get(j) + " " );
 			System.out.println();
 		}
-	}
+*/	}
 
 	protected int checkDependency( int index ) {
 
@@ -134,7 +134,7 @@ public class Pipeline {
 
 		hasDependency = false;
 
-		for(i=0; i<index; i++) {
+		for(i=(index-1); i>=0; i--) {
 			if( operand[index][0].equals(operand[i][0]) || operand[index][0].equals(operand[i][1]) || operand[index][1].equals(operand[i][0]) ) {
 //				System.out.println( "operation " + index + " has dependency with " + i );
 				hasDependency = true;
